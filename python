@@ -1,0 +1,26 @@
+from http.server import SimpleHTTPRequestHandler, HTTPServer
+
+PORT = 8000
+
+class MyHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/':
+            # Serve a custom HTML response
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            html = '''
+            <html>
+                <head><title>My Python Webpage</title></head>
+                <body>
+                    <h1>Hello from pure Python!</h1>
+                    <p>This is a simple webpage without Flask.</p>
+                </body>
+            </html>
+            '''
+            self.wfile.write(html.encode('utf-8'))
+        else:
+            # Fall back to default handler
+            super().do_GET()
+
+with HTTPServer(("0.0.0.0", PORT), MyHandler) as httpd:
